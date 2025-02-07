@@ -1,0 +1,27 @@
+{
+    "descricao": "A interface File provê informações sobre arquivos e permite ao JavaScript acessar seu conteúdo.",
+    "fontes": [
+      {
+        "nome": "FileList",
+        "url": "https://developer.mozilla.org/pt-BR/docs/Web/API/FileList"
+      },
+      {
+        "nome": "Elemento <input>",
+        "url": "https://developer.mozilla.org/pt-BR/docs/Web/HTML/Element/Input"
+      },
+      {
+        "nome": "DataTransfer",
+        "url": "https://developer.mozilla.org/pt-BR/docs/Web/API/DataTransfer"
+      },
+      {
+        "nome": "HTMLCanvasElement",
+        "url": "https://developer.mozilla.org/pt-BR/docs/Web/API/HTMLCanvasElement"
+      },
+      {
+        "nome": "Implementation Notes",
+        "url": "https://developer.mozilla.org/pt-BR/docs/Web/API/File#implementation_notes"
+      }
+    ],
+    "observacao": "Em Gecko, códigos com privilégios podem criar objetos File representando qualquer arquivo local sem a interação do usuário."
+  }
+  

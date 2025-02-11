@@ -28,7 +28,7 @@ async function checaStatus(listaURLs) {
         console.log('Achei no cache:'+ url);
         return cache.get(url);
       }
-
+//console.log('teste');
       try {
         const response = await fetch(url);
         cache.set(url, response.status); 

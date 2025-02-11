@@ -7,26 +7,27 @@ const caminho = process.argv;
 
 async function imprimeLista(valida, resultado, identificador = '', json = false) {
   if (json) {
-    // Formata a saída como JSON
-    const output = {
-      identificador: identificador || 'arquivo',
+    // formato JSON
+    const saida = {
+      identificador: identificador || 'arquivo JSON',
       links: resultado.links,
       total: resultado.total,
     };
 
     if (valida) {
-      output.links = await listaValidada(resultado.links);
+      saida.links = await listaValidada(resultado.links);
     }
 
-    console.log(JSON.stringify(output, null, 2));
+    console.log(JSON.stringify(saida, null, 3));
     return;
   }
 
-  // Formato tradicional
+  // Formato valida
   if (valida) {
     console.log(
       chalk.yellow('Lista validada'),
       chalk.black.bgGreen(identificador),
+      await listaValidada(resultado.links),
       await listaValidada(resultado.links),
       chalk.black.bgGreen(resultado.total)
     );

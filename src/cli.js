@@ -5,18 +5,34 @@ import listaValidada from './http-validacao.js';
 
 const caminho = process.argv;
 
-async function imprimeLista(valida, resultado, identificador = '') {
+async function imprimeLista(valida, resultado, identificador = '', json = false) {
+  if (json) {
+    // Formata a saída como JSON
+    const output = {
+      identificador: identificador || 'arquivo',
+      links: resultado.links,
+      total: resultado.total,
+    };
+
+    if (valida) {
+      output.links = await listaValidada(resultado.links);
+    }
+
+    console.log(JSON.stringify(output, null, 2));
+    return;
+  }
+
+  // Formato tradicional
   if (valida) {
     console.log(
-      chalk.yellow('lista validada'),
+      chalk.yellow('Lista validada'),
       chalk.black.bgGreen(identificador),
       await listaValidada(resultado.links),
       chalk.black.bgGreen(resultado.total)
     );
-
   } else {
     console.log(
-      chalk.yellow('lista de links'),
+      chalk.yellow('Lista de links'),
       chalk.black.bgGreen(identificador),
       resultado.links,
       chalk.black.bgGreen(resultado.total)
@@ -24,29 +40,29 @@ async function imprimeLista(valida, resultado, identificador = '') {
   }
 }
 
-
 async function processaTexto(argumentos) {
   const caminho = argumentos[2];
-  const valida = argumentos[3] === '--valida';
+  const valida = argumentos.includes('--valida');
+  const json = argumentos.includes('--json');
 
   try {
     fs.lstatSync(caminho);
   } catch (erro) {
     if (erro.code === 'ENOENT') {
-      console.log('arquivo ou diretório não existe');
+      console.log('Arquivo ou diretório não existe');
       return;
     }
   }
 
   if (fs.lstatSync(caminho).isFile()) {
     const resultado = await pegaArquivo(argumentos[2]);
-    imprimeLista(valida, resultado);
+    imprimeLista(valida, resultado, '', json);
   } else if (fs.lstatSync(caminho).isDirectory()) {
-    const arquivos = await fs.promises.readdir(caminho)
+    const arquivos = await fs.promises.readdir(caminho);
     arquivos.forEach(async (nomeDeArquivo) => {
-      const lista = await pegaArquivo(`${caminho}/${nomeDeArquivo}`)
-      imprimeLista(valida, lista, nomeDeArquivo)
-    })
+      const lista = await pegaArquivo(`${caminho}/${nomeDeArquivo}`);
+      imprimeLista(valida, lista, nomeDeArquivo, json);
+    });
   }
 }
 

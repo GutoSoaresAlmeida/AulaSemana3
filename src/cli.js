@@ -10,12 +10,17 @@ async function imprimeLista(valida, resultado, identificador = '') {
     console.log(
       chalk.yellow('lista validada'),
       chalk.black.bgGreen(identificador),
-      await listaValidada(resultado));    
+      await listaValidada(resultado.links),
+      chalk.black.bgGreen(resultado.total)
+    );
+
   } else {
     console.log(
       chalk.yellow('lista de links'),
       chalk.black.bgGreen(identificador),
-      resultado);
+      resultado.links,
+      chalk.black.bgGreen(resultado.total)
+    );
   }
 }
 

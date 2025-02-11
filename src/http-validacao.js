@@ -4,7 +4,34 @@ function extraiLinks (arrLinks) {
   return arrLinks.map((objetoLink) => Object.values(objetoLink).join())
 }
 
-async function checaStatus (listaURLs) {
+
+const cache = new Map();
+
+async function checaStatus(listaURLs) {
+  const arrStatus = await Promise.all(
+    listaURLs.map(async (url) => {
+      if (cache.has(url)) {
+        console.log('já existe no cache para: ${url}');
+        return cache.get(url);
+      }
+
+      try {
+        const response = await fetch(url);
+        cache.set(url, response.status);
+        return response.status;
+      } catch (erro) {
+        const status = manejaErros(erro);
+        cache.set(url, status);
+        return status;
+      }
+    })
+  );
+
+  return arrStatus;
+}
+
+
+async function checaStatus_antigo (listaURLs) {
   const arrStatus = await Promise
   .all(
     listaURLs.map(async (url) => {
@@ -22,7 +49,12 @@ async function checaStatus (listaURLs) {
 function manejaErros (erro) {
   if (erro.cause.code === 'ENOTFOUND') {
     return 'link não encontrado';
-  } else {
+  }else if (erro.cause.code === 'ECONNREFUSED') {
+    return 'conexão ao servidor falhou';
+  }else if (erro.cause.code === 'ETIMEDOUT') {
+    return 'requisição demorou muito para responder';
+  }
+   else {
     return 'ocorreu algum erro';
   }
 }
